@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI Finance Assistant
 
 A beginner-friendly personal finance web application built from the supplied AI Finance Assistant SRS.
@@ -92,3 +93,6 @@ ai_finance_assistant/
 - Chart.js and Google Fonts are loaded from CDNs, so those visual enhancements need an internet connection. The core Flask application runs locally.
 - For deployment, set a strong random `SECRET_KEY`, turn off Flask debug mode, use HTTPS, and configure production hosting and database backups.
 - This educational project does not connect to banks, move money, provide investment/tax advice, or replace a qualified financial professional.
+=======
+# AI-FINANCE-ASSISTANT
+>>>>>>> f6000e64b47b2ab85b516e9e7d24476907ed0f27
