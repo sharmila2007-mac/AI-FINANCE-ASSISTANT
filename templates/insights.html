@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}AI Insights | AI Finance Assistant{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">UNDERSTAND YOUR HABITS</p><h1>AI financial insights</h1><p class="muted">Simple explanations based on your recorded transactions.</p></div>
+<form method="get" class="month-form"><label>Month <input type="month" name="month" value="{{ month }}"></label><button class="secondary">View</button></form></div>
+<section class="panel"><h2>Spending observations · {{ month }}</h2>{% for insight in insights %}<div class="insight-row">✦ {{ insight }}</div>{% endfor %}</section>
+<section class="panel"><h2>Spending estimate</h2><p>{{ forecast_message }}</p><p class="hint">Method: average of up to the latest three months with recorded expenses. This is a simple educational estimate, not a guarantee.</p></section>
+<div class="disclaimer">Important: This application provides educational financial tracking and estimates only. It is not professional investment, tax or financial advice.</div>
+{% endblock %}

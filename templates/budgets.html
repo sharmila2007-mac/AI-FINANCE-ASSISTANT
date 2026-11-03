@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Budgets | AI Finance Assistant{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">PLAN AHEAD</p><h1>Budgets</h1><p class="muted">Set monthly category limits and monitor your progress.</p></div></div>
+<section class="panel"><h2>Create or update a budget</h2>
+<form method="post" class="transaction-form">
+<label>Month<input type="month" name="month" value="{{ current_month }}" required></label>
+<label>Category<select name="category" required>{% for cat in categories %}<option>{{ cat }}</option>{% endfor %}</select></label>
+<label>Limit (₹)<input type="number" name="limit_amount" min="0.01" step="0.01" placeholder="5000" required></label>
+<button class="primary">Save budget</button>
+</form><p class="hint">Saving the same month and category updates the existing budget.</p>
+</section>
+<section class="panel"><h2>Your budgets</h2>
+{% if budgets %}<div class="budget-list">{% for b in budgets %}
+<div class="budget-item"><div class="budget-head"><div><strong>{{ b.category }}</strong><span class="muted"> · {{ b.month }}</span></div><strong>₹{{ "%.2f"|format(b.spent) }} / ₹{{ "%.2f"|format(b.limit) }}</strong></div>
+<div class="progress"><span style="width:{{ b.percent }}%"></span></div>
+<div class="budget-foot"><span>{{ "%.0f"|format(b.percent) }}% used{% if b.spent > b.limit %} · Over budget{% endif %}</span>
+<form method="post" action="{{ url_for('delete_budget', budget_id=b.id) }}"><button class="link danger-text">Delete</button></form></div></div>
+{% endfor %}</div>{% else %}<div class="empty">No budgets created yet.</div>{% endif %}
+</section>
+{% endblock %}

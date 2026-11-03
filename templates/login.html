@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Login | AI Finance Assistant{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <div class="brand-mark">₹</div><h1>Welcome back</h1><p class="muted">Sign in to manage your money mindfully.</p>
+  <form method="post" class="stack">
+    <label>Email<input type="email" name="email" placeholder="you@example.com" required></label>
+    <label>Password<input type="password" name="password" placeholder="At least 8 characters" required></label>
+    <button class="primary">Log in</button>
+  </form>
+  <p class="auth-foot">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+</div>
+{% endblock %}

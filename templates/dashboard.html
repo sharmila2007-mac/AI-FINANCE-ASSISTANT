@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% block title %}Dashboard | AI Finance Assistant{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">OVERVIEW</p><h1>Hello, {{ session.get('user_name') }} 👋</h1><p class="muted">Here is your financial snapshot.</p></div>
+<form method="get" class="month-form"><label>Month <input type="month" name="month" value="{{ month }}"></label><button class="secondary">View</button></form></div>
+<div class="stats-grid">
+  <div class="stat-card"><span>Total income</span><strong class="green">₹{{ "%.2f"|format(income) }}</strong></div>
+  <div class="stat-card"><span>Total expenses</span><strong class="red">₹{{ "%.2f"|format(expenses) }}</strong></div>
+  <div class="stat-card"><span>Available balance</span><strong>₹{{ "%.2f"|format(balance) }}</strong></div>
+</div>
+<div class="content-grid">
+  <section class="panel"><div class="panel-title"><h2>Spending by category</h2><span class="muted">{{ month }}</span></div>
+    {% if categories %}<canvas id="categoryChart"></canvas>{% else %}<div class="empty">No expenses for this month yet. Add a transaction to see your chart.</div>{% endif %}
+  </section>
+  <section class="panel"><div class="panel-title"><h2>Monthly trend</h2></div>
+    {% if trend_labels %}<canvas id="trendChart"></canvas>{% else %}<div class="empty">Your monthly trend will appear after you record expenses.</div>{% endif %}
+  </section>
+</div>
+<section class="panel"><div class="panel-title"><h2>AI financial insights</h2><a href="{{ url_for('insights') }}">View all →</a></div>
+  {% for insight in insights %}<div class="insight-row">✦ {{ insight }}</div>{% endfor %}
+</section>
+<section class="panel"><div class="panel-title"><h2>Recent transactions</h2><a href="{{ url_for('transactions') }}">Manage →</a></div>
+  {% if transactions %}<div class="table-wrap"><table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead><tbody>
+  {% for tx in transactions %}<tr><td>{{ tx.tx_date }}</td><td>{{ tx.description }}</td><td>{{ tx.category }}</td><td>{{ tx.tx_type|title }}</td><td>₹{{ "%.2f"|format(tx.amount) }}</td></tr>{% endfor %}
+  </tbody></table></div>{% else %}<div class="empty">No transactions yet. Start by adding your first income or expense.</div>{% endif %}
+</section>
+<script>
+const categoryLabels = {{ categories|tojson }};
+const categoryValues = {{ category_values|tojson }};
+const trendLabels = {{ trend_labels|tojson }};
+const trendValues = {{ trend_values|tojson }};
+if (document.getElementById('categoryChart')) new Chart(document.getElementById('categoryChart'), {
+ type:'doughnut', data:{labels:categoryLabels,datasets:[{data:categoryValues,backgroundColor:['#52796f','#84a98c','#cad2c5','#f4a261','#e76f51','#457b9d','#a8dadc','#9b8ac4']}]},
+ options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+});
+if (document.getElementById('trendChart')) new Chart(document.getElementById('trendChart'), {
+ type:'line', data:{labels:trendLabels,datasets:[{label:'Expenses (₹)',data:trendValues,borderColor:'#52796f',backgroundColor:'rgba(82,121,111,.12)',fill:true,tension:.3}]},
+ options:{responsive:true,scales:{y:{beginAtZero:true}}}
+});
+</script>
+{% endblock %}

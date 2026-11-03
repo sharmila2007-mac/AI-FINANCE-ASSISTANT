@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Transactions | AI Finance Assistant{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">MONEY MOVEMENT</p><h1>Transactions</h1><p class="muted">Record income and expenses. Expense categories are suggested by ML.</p></div></div>
+<section class="panel"><h2>Add a transaction</h2>
+<form method="post" class="transaction-form">
+  <label>Description<input name="description" placeholder="e.g. Swiggy dinner 450" required></label>
+  <label>Amount (₹)<input name="amount" type="number" min="0.01" step="0.01" placeholder="450" required></label>
+  <label>Date<input name="tx_date" type="date" value="{{ today }}" required></label>
+  <label>Type<select name="tx_type"><option value="expense">Expense</option><option value="income">Income</option></select></label>
+  <label>Optional category<select name="category"><option value="">Auto-detect</option>{% for cat in categories %}<option>{{ cat }}</option>{% endfor %}</select></label>
+  <button class="primary">Save transaction</button>
+</form><p class="hint">For expenses, leave category as Auto-detect to use the machine-learning classifier.</p>
+</section>
+<section class="panel"><div class="panel-title"><h2>All transactions</h2><span class="muted">{{ transactions|length }} records</span></div>
+{% if transactions %}<div class="table-wrap"><table><thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Category</th><th>Amount</th><th>Actions</th></tr></thead><tbody>
+{% for tx in transactions %}<tr><td>{{ tx.tx_date }}</td><td>{{ tx.description }}</td><td>{{ tx.tx_type|title }}</td><td>{{ tx.category }}</td><td>₹{{ "%.2f"|format(tx.amount) }}</td><td class="actions"><a href="{{ url_for('edit_transaction', transaction_id=tx.id) }}">Edit</a><form method="post" action="{{ url_for('delete_transaction', transaction_id=tx.id) }}" onsubmit="return confirm('Delete this transaction?')"><button class="link danger-text">Delete</button></form></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty">Your transaction history is empty.</div>{% endif %}
+</section>
+{% endblock %}

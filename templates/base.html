@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AI Finance Assistant{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+{% if session.get('user_id') %}
+<header class="topbar">
+  <a class="brand" href="{{ url_for('dashboard') }}">₹ AI Finance Assistant</a>
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('transactions') }}">Transactions</a>
+    <a href="{{ url_for('budgets') }}">Budgets</a>
+    <a href="{{ url_for('insights') }}">AI Insights</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </nav>
+</header>
+{% endif %}
+<main class="{% if not session.get('user_id') %}auth-main{% else %}container{% endif %}">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<div class="flash-wrap">{% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}</div>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+{% if session.get('user_id') %}
+<div class="chat-widget">
+  <button id="chat-toggle" class="chat-toggle" aria-label="Open finance assistant">Ask Assistant</button>
+  <section id="chat-panel" class="chat-panel hidden">
+    <div class="chat-heading">Finance Assistant <button id="chat-close" aria-label="Close">×</button></div>
+    <div id="chat-messages" class="chat-messages"><p class="bot-msg">Hi! Ask me about transactions, budgets, dashboard or spending estimates.</p></div>
+    <form id="chat-form"><input id="chat-input" placeholder="Type your question..." autocomplete="off" required><button>Send</button></form>
+  </section>
+</div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endif %}
+</body>
+</html>
